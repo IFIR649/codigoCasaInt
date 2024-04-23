@@ -1,0 +1,102 @@
+#include <IRremote.hpp>
+#define IR_RECEIVE_PIN 11
+float clave=false;
+float acceso=false;
+
+int estadoGlobal=1;
+String value;
+String contra;
+
+//verifica en que modo está
+void estado(){
+  if(IrReceiver.decodedIRData.decodedRawData,HEX == "B946FF00"){
+    estadoGlobal++;
+    if(estadoGlobal>=4){
+      estadoGlobal==0;
+    }
+  }
+}
+
+//
+void elegirFuncion(int valor){
+  if(estadoGlobal==1){
+        //contrasenha
+        while(true){
+          
+        }
+      }else if(stadoGlobal==2){
+        
+      }else if(stadoGlobal==3){
+        
+      }else{
+        
+      }
+}
+
+
+
+void setup()
+{
+  Serial.begin(9600);
+  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start the receiver
+}
+
+void loop() {
+  if (IrReceiver.decode()) {
+      //Serial.println(IrReceiver.decodedIRData.decodedRawData,HEX); // Print "old" raw data
+      estado();
+      value = IrReceiver.decodedIRData.decodedRawData,HEX;
+      
+      IrReceiver.resume(); // Enable receiving of the next value
+
+      while(clave=true){
+        
+      }
+
+
+
+
+      
+  }
+}
+
+/*
+BA45FF00 10
+B946FF00 11
+B847FF00 12
+
+BB44FF00 13
+BF40FF00 14
+BC43FF00 15
+
+F807FF00 16
+EA15FF00 17
+F609FF00 18
+
+E916FF00 19
+E619FF00 20
+F20DFF00 21
+
+F30CFF00 1
+E718FF00 2
+A15EFF00 3
+
+F708FF00 4
+E31CFF00 5
+A55AFF00 6
+
+BD42FF00 7
+AD52FF00 8
+B54AFF00 9
+*/
+
+
+
+
+
+
+
+
+
+
+
