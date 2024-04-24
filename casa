@@ -1,37 +1,69 @@
 #include <IRremote.hpp>
 #define IR_RECEIVE_PIN 11
 float clave=false;
-float acceso=false;
+float acceso=false; //da acceso al sistema
+int estados=1;
 
-int estadoGlobal=1;
-String value;
-String contra;
+int estadoGlobal=1;//el modo en que se encuentra
+String value;//valor de la señal
+String contra;//contra escrita
+int contraUser=110011;//contra guardada del usuario
+
+
+
+//verificar el usuario por contrasenha
+void verificarUser(){
+  while(true){
+              
+      if (IrReceiver.decode()){
+          value = IrReceiver.decodedIRData.decodedRawData,HEX;
+          IrReceiver.resume(); // Enable receiving of the next value
+          contra+=value;
+                
+          if(contra.length()==5){
+             if(contra==contraUser){
+                 acceso=true;
+             }else{
+                acceso=false;
+                 break;
+             }            
+           }                
+        }
+    }
+}
 
 //verifica en que modo está
 void estado(){
-  if(IrReceiver.decodedIRData.decodedRawData,HEX == "B946FF00"){
-    estadoGlobal++;
+  
+  if(IrReceiver.decodedIRData.decodedRawData,HEX == "B946FF00" && acceso==true){
     if(estadoGlobal>=4){
-      estadoGlobal==0;
+      estadoGlobal==2;
+    }else{
+      estadoGlobal++;
     }
+    
+  }else if(IrReceiver.decodedIRData.decodedRawData,HEX == "B946FF00" && acceso==false){
+    estadoGlobal=1;
   }
 }
 
-//
-void elegirFuncion(int valor){
+
+
+//ejecuta la accion dependiento el modo en que este
+void elegirFuncion(){
   if(estadoGlobal==1){
         //contrasenha
-        while(true){
-          
-        }
-      }else if(stadoGlobal==2){
-        
-      }else if(stadoGlobal==3){
-        
+        verificarUser();
+      }else if(estadoGlobal==2){
+        estados==1;
+      }else if(estadoGlobal==3){
+        estados==3;
       }else{
         
       }
 }
+
+
 
 
 
@@ -42,21 +74,12 @@ void setup()
 }
 
 void loop() {
-  if (IrReceiver.decode()) {
-      //Serial.println(IrReceiver.decodedIRData.decodedRawData,HEX); // Print "old" raw data
-      estado();
-      value = IrReceiver.decodedIRData.decodedRawData,HEX;
-      
-      IrReceiver.resume(); // Enable receiving of the next value
-
-      while(clave=true){
-        
-      }
-
-
-
-
-      
+  //verifica si hay una sesion, si: solo alterna entre apagados y encendidos
+  if (IrReceiver.decode() && acceso==true) {
+    elegirFuncion();
+    
+  }else if(IrReceiver.decode() && acceso==true){
+    verificarUser();
   }
 }
 
@@ -89,14 +112,3 @@ BD42FF00 7
 AD52FF00 8
 B54AFF00 9
 */
-
-
-
-
-
-
-
-
-
-
-
